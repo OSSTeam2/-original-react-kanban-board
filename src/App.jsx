@@ -85,7 +85,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>📋 Kanban Board</h1>
+        <h1>wjDEV preview</h1>
         <button className="btn-reset" onClick={resetBoard} title="Reset board to defaults">
           Reset Board
         </button>
