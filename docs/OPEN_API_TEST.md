@@ -22,8 +22,9 @@
 ## 2. 로컬 테스트 실행 방법 (두 팀원 공통)
 
 ```bash
-cp .env.example .env.local
-# .env.local 파일에 CANVAS_BASE_URL 및 본인의 CANVAS_API_TOKEN 입력 (.gitignore 처리됨)
+# 프로젝트 루트에 .env.local 파일을 만들고 아래 2줄을 입력 (.gitignore 처리됨)
+# CANVAS_BASE_URL=https://lms.handong.edu
+# CANVAS_API_TOKEN=여기에_본인_토큰_입력
 
 npm run api:test
 ```
@@ -34,10 +35,10 @@ npm run api:test
 
 ## 3. 팀원별 실제 호출 테스트 기록
 
-### 3.1 신태현 테스트 결과 (작성 예정)
+### 3.1 신태현 테스트 결과 (완료)
 
-- **테스트 일시**: *(실행 후 기입)*
-- **테스트 환경**: Node.js `fetch` (`scripts/test-canvas-api.mjs`)
+- **테스트 일시**: `2026-11-29 04:16:42 KST` (`2026-11-28T19:16:42.816Z`)
+- **테스트 환경**: Node.js `fetch` (`npm run api:test` → `scripts/test-canvas-api.mjs`, `.env.local` 비공개 토큰 사용)
 
 #### 요청 1: 수강 과목 목록 조회
 ```http
@@ -45,7 +46,8 @@ GET https://lms.handong.edu/api/v1/courses?enrollment_state=active&per_page=5
 Authorization: Bearer <REDACTED_TOKEN>
 Accept: application/json
 ```
-- **HTTP 상태**: *(예: `200 OK` — 실제 호출 후 기입)*
+- **HTTP 상태**: `200 OK`
+- **응답 과목 수 (샘플 요청)**: `5건`
 - **마스킹된 응답 JSON 예시**:
 ```json
 [
@@ -53,6 +55,13 @@ Accept: application/json
     "id": "<COURSE_ID_1>",
     "name": "<MASKED_COURSE_NAME_1>",
     "course_code": "<MASKED_COURSE_CODE_1>",
+    "enrollment_term_id": "<TERM_ID>",
+    "workflow_state": "available"
+  },
+  {
+    "id": "<COURSE_ID_2>",
+    "name": "<MASKED_COURSE_NAME_2>",
+    "course_code": "<MASKED_COURSE_CODE_2>",
     "enrollment_term_id": "<TERM_ID>",
     "workflow_state": "available"
   }
@@ -65,27 +74,17 @@ GET https://lms.handong.edu/api/v1/courses/<COURSE_ID_1>/assignments?include[]=s
 Authorization: Bearer <REDACTED_TOKEN>
 Accept: application/json
 ```
-- **HTTP 상태**: *(예: `200 OK` — 실제 호출 후 기입)*
+- **HTTP 상태**: `200 OK`
+- **응답 과제 수 (샘플 요청)**: `0건`
 - **마스킹된 응답 JSON 예시**:
 ```json
-[
-  {
-    "id": "<ASSIGNMENT_ID_1>",
-    "course_id": "<COURSE_ID_1>",
-    "name": "<MASKED_ASSIGNMENT_TITLE_1>",
-    "due_at": "<ISO_DUE_DATE_MASKED>",
-    "points_possible": 100,
-    "published": true,
-    "html_url": "https://<LMS_HOST>/courses/<COURSE_ID_1>/assignments/<ASSIGNMENT_ID>",
-    "submission": {
-      "workflow_state": "submitted",
-      "submitted_at": "<ISO_SUBMITTED_AT_MASKED>",
-      "late": false,
-      "missing": false
-    }
-  }
-]
+[]
 ```
+
+#### 테스트 확인 사항 및 설계 반영
+- 두 엔드포인트 모두 `200 OK` 정상 응답 및 Bearer 토큰 인증 동작 확인.
+- 첫 번째 조회 과목(`<COURSE_ID_1>`)은 등록된 과제가 0건이라 빈 배열(`[]`)이 반환됨 → 14주차 실연동(`src/canvasApi.js`)에서는 모든 활성 과목을 병렬 조회하고, 과제가 없는 과목(`[]`)이나 권한 없는 과목은 오류 없이 건너뛰도록 구현함.
+- 출력에서 개인 토큰, 학번, 실제 과목명·과제명이 모두 자동 마스킹됨을 확인.
 
 ---
 

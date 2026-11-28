@@ -41,7 +41,7 @@ if (!token || token === "your_canvas_personal_access_token_here") {
   console.error(
     [
       "[오류] CANVAS_API_TOKEN이 설정되지 않았습니다.",
-      "1) .env.example을 복사해 .env.local 파일을 만든 뒤 실제 토큰을 입력하거나,",
+      "1) 프로젝트 루트에 .env.local 파일을 만들고 CANVAS_BASE_URL, CANVAS_API_TOKEN을 입력하거나,",
       "2) CANVAS_API_TOKEN=... npm run api:test 형태로 실행해 주세요.",
       "※ .env.local은 .gitignore에 포함되어 있어 Git에 올라가지 않습니다.",
     ].join("\n")

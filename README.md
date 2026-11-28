@@ -46,7 +46,7 @@ npm run dev
 ## Canvas LMS Open API 테스트 (보안 주의)
 
 - 실제 액세스 토큰, 학번, 개인 과제 데이터는 절대 저장소에 커밋하지 않습니다.
-- `.env.example`을 `.env.local`로 복사해 로컬에서만 테스트하고, 자동 마스킹된 출력 결과만 [docs/OPEN_API_TEST.md](docs/OPEN_API_TEST.md)에 기록합니다.
+- 프로젝트 루트에 `.env.local` 파일을 직접 생성해(`CANVAS_BASE_URL`, `CANVAS_API_TOKEN` 입력) 로컬에서만 테스트하고, 자동 마스킹된 출력 결과만 [docs/OPEN_API_TEST.md](docs/OPEN_API_TEST.md)에 기록합니다.
 
 ---
 
@@ -75,7 +75,6 @@ npm run dev
 │   ├── App.jsx
 │   ├── App.css
 │   └── main.jsx
-├── .env.example
 ├── package.json
 └── vite.config.js
 ```
