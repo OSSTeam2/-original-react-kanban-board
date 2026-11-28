@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 
+function resolveInitial(initialValue) {
+  return typeof initialValue === "function" ? initialValue() : initialValue;
+}
+
 export function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      return item ? JSON.parse(item) : resolveInitial(initialValue);
     } catch {
-      return initialValue;
+      return resolveInitial(initialValue);
     }
   });
 
@@ -19,9 +23,10 @@ export function useLocalStorage(key, initialValue) {
   }, [key, storedValue]);
 
   const reset = useCallback(() => {
-    setStoredValue(initialValue);
+    const freshValue = resolveInitial(initialValue);
+    setStoredValue(freshValue);
     try {
-      window.localStorage.removeItem(key);
+      window.localStorage.setItem(key, JSON.stringify(freshValue));
     } catch {
       // ignore
     }
