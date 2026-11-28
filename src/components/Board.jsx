@@ -20,7 +20,7 @@ export default function Board({
   } = useDragAndDrop(onCardMove);
 
   return (
-    <div className="board">
+    <main className="board">
       {columns.map((colName) => (
         <Column
           key={colName}
@@ -38,6 +38,6 @@ export default function Board({
           onDeleteCard={onDeleteCard}
         />
       ))}
-    </div>
+    </main>
   );
 }
